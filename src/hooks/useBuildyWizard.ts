@@ -19,7 +19,7 @@ const INITIAL_STATE: WizardState = {
   subjectPreset: 'none',
 }
 
-// ── HU-03: Generador de credenciales seguras ──
+// ── HU-03: Generador de credenciales seguras ────
 export function generateSecureCredentials() {
   const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$'
   const password = Array.from({ length: 18 }, () =>
