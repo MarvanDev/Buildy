@@ -83,7 +83,7 @@ export function Step1Core({ wizard }: StepProps) {
               <select value={state.version} onChange={(e) => updateState({ version: e.target.value })}
                 className="buildy-input w-full rounded-lg px-3 py-2.5 pr-9 text-sm appearance-none bg-input text-foreground cursor-pointer">
                 {selectedTech.versions.map((v) => (
-                  <option key={v.value} value={v.value}>{v.label}{v.recommended ? ' ★ recomendada' : ''}</option>
+                  <option key={v.value} value={v.value}>{v.label}{v.recommended ? 'Recomendación Unillanos' : ''}</option>
                 ))}
               </select>
               <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />

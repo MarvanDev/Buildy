@@ -16,7 +16,7 @@ const DB_OPTIONS: { id: DatabaseChoice; label: string; description: string; icon
 // AISLAMOS LA TARJETA CON MEMO PARA QUE NO HAYA LAG AL ESCRIBIR
 const DbCard = memo(({ db, isSelected, onClick }: { db: any, isSelected: boolean, onClick: () => void }) => (
   <button onClick={onClick}
-    className={cn('flex flex-col items-center gap-2.5 rounded-lg border p-4 interactive-card cursor-pointer text-center transition-all duration-75',
+    className={cn('flex flex-col items-center gap-2.5 rounded-lg border p-5 interactive-card cursor-pointer text-center transition-all duration-75',
       isSelected ? `card-selected ${db.bgClass}` : 'border-border bg-muted/30 hover:bg-muted/50')}>
     <span className="text-2xl leading-none">{db.icon}</span>
     <div>
@@ -71,7 +71,7 @@ export function Step3Database({ wizard }: StepProps) {
               Generar seguras
             </button>
           </div>
-          <div className="grid sm:grid-cols-2 gap-4">
+          <div className="grid sm:grid-cols-2 gap-5">
             <div>
               <label className="text-xs font-medium text-muted-foreground mb-1.5 block uppercase tracking-wide">Nombre de la DB</label>
               <input type="text" value={state.database.name} onChange={(e) => updateDatabase({ name: e.target.value })} placeholder="myapp_db" className="buildy-input w-full rounded-lg px-3 py-2.5 text-sm font-mono" />
