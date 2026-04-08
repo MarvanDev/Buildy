@@ -3,22 +3,22 @@ import React, { useState, memo } from 'react'
 import { cn } from '../../../lib/utils'
 import { generateSecureCredentials } from '../../../hooks/useBuildyWizard'
 import type { UseBuildyWizardReturn } from '../../../types/wizard.types'
-import { DB_OPTIONS } from '../../../constants/db.constants'
+import { DB_OPTIONS }  from '../../../constants/db.constants'
 
 interface StepProps { wizard: UseBuildyWizardReturn }
 
-const DbCard = memo(({ db, isSelected, onClick }: { db: any, isSelected: boolean, onClick: () => void }) => (
-  <button onClick={onClick}
-    className={cn('flex flex-col items-center gap-2.5 rounded-lg border p-4 interactive-card cursor-pointer text-center transition-all duration-75',
-      isSelected ? `card-selected ${db.bgClass}` : 'border-border bg-muted/30 hover:bg-muted/50')}>
-    <span className="text-2xl leading-none">{db.icon}</span>
+const DbCard = memo(({  db, isSelected, onClick }: { db: any, isSelected: boolean, onClick: () => void }) => (
+  <button  onClick={onClick}
+    className ={cn('flex flex-col items-center gap-2.5 rounded-lg border p-4 interactive-card cursor-pointer text-center transition-all duration-75',
+      isSelected  ? `card-selected ${db.bgClass}` : 'border-border bg-muted/30 hover:bg-muted/50')}>
+    <span className ="text-2xl leading-none">{db.icon}</span>
     <div>
-      <p className={cn('text-sm font-semibold', isSelected ? 'text-foreground' : 'text-muted-foreground')}>{db.label}</p>
-      <p className="text-xs text-muted-foreground mt-0.5">{db.description}</p>
+      <p className ={cn('text-sm font-semibold', isSelected ? 'text-foreground' : 'text-muted-foreground')}>{db.label}</p>
+      <p className ="text-xs text-muted-foreground mt-0.5">{db.description}</p>
     </div>
   </button>
 ))
-DbCard.displayName = 'DbCard'
+DbCard.displayName='DbCard'
 
 export function Step3Database({ wizard }: StepProps) {
   const { state, updateDatabase } = wizard
