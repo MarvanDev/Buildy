@@ -17,13 +17,13 @@ import {
   Position,
   BackgroundVariant,
 } from '@xyflow/react'
-// INTEGRACIÓN: Importación esencial de estilos de la librería
 import '@xyflow/react/dist/style.css' 
 import type { WizardState } from '../../types/wizard.types'
 
-//  Props interface (En TS01 solo manejamos el estado base)
+//  Props interface
 interface ArchitectureDiagramProps {
   state: WizardState
+  projectName?: string
 }
 
 //  Node data shape 
@@ -37,10 +37,14 @@ interface ServiceNodeData {
   [key: string]: unknown
 }
 
-// Custom Node component (Definición visual de la infraestructura)
+// Custom Node component 
 function ServiceNode({ data }: { data: ServiceNodeData }) {
   return (
-    <div className="relative group" style={{ minWidth: 140 }}>
+    <div
+      className="relative group"
+      style={{ minWidth: 140 }}
+    >
+      {/* Input handle */}
       <Handle
         type="target"
         position={Position.Left}
@@ -52,6 +56,7 @@ function ServiceNode({ data }: { data: ServiceNodeData }) {
         }}
       />
 
+      {/* Card */}
       <div
         style={{
           background: 'hsl(0 0% 8%)',
@@ -68,6 +73,7 @@ function ServiceNode({ data }: { data: ServiceNodeData }) {
           transition: 'box-shadow 0.2s',
         }}
       >
+        {/* Icon ring */}
         <div
           style={{
             width: 44,
@@ -84,6 +90,7 @@ function ServiceNode({ data }: { data: ServiceNodeData }) {
           {data.icon}
         </div>
 
+        {/* Text */}
         <div style={{ textAlign: 'center' }}>
           <p style={{ color: 'hsl(0 0% 93%)', fontWeight: 600, fontSize: 12, margin: 0 }}>
             {data.label}
@@ -96,6 +103,7 @@ function ServiceNode({ data }: { data: ServiceNodeData }) {
         </div>
       </div>
 
+      {/* Output handle */}
       <Handle
         type="source"
         position={Position.Right}
@@ -110,10 +118,12 @@ function ServiceNode({ data }: { data: ServiceNodeData }) {
   )
 }
 
+// Custom node types registry 
 const nodeTypes: NodeTypes = {
   service: ServiceNode as NodeTypes['service'],
 }
 
+// Color palette per service kind
 const SERVICE_COLORS: Record<string, string> = {
   nodejs: 'hsl(142 71% 45%)',
   python: 'hsl(207 90% 54%)',
@@ -136,8 +146,8 @@ const SERVICE_ICONS: Record<string, string> = {
   internet: '🌐',
 }
 
-// LÓGICA DE INTEGRACIÓN: Construcción base del grafo
-function buildDiagramData(state: WizardState): {
+// Node/edge builder
+function buildDiagramData(state: WizardState, projectName: string = 'App'): {
   nodes: Node[]
   edges: Edge[]
 } {
@@ -147,7 +157,6 @@ function buildDiagramData(state: WizardState): {
   const langId = state.language ?? 'nodejs'
   const langColor = SERVICE_COLORS[langId] ?? 'hsl(185 85% 47%)'
 
-  // Nodo Internet
   nodes.push({
     id: 'internet',
     type: 'service',
@@ -160,13 +169,13 @@ function buildDiagramData(state: WizardState): {
     } as ServiceNodeData,
   })
 
-  // Nodo App (Estático para TS01)
+  // App node (main)
   nodes.push({
     id: 'app',
     type: 'service',
     position: { x: 240, y: 120 },
     data: {
-      label: 'App', // <-- En TS01 lo dejamos fijo o base
+      label: projectName,
       sublabel: `:${state.internalPort}`,
       icon: SERVICE_ICONS[langId] ?? '📦',
       accentColor: langColor,
@@ -185,15 +194,112 @@ function buildDiagramData(state: WizardState): {
     labelBgStyle: { fill: 'hsl(0 0% 8%)', fillOpacity: 0.8 },
   })
 
-  // (Aquí seguiría el resto del mapeo de DB y presets que ya tienes)
-  // ...
+  // Database node
+  if (state.database.choice !== 'none') {
+    const dbId = state.database.choice
+    const dbColor = SERVICE_COLORS[dbId] ?? 'hsl(185 85% 47%)'
+    const dbPorts: Record<string, string> = {
+      postgresql: ':5432', mysql: ':3306', mongodb: ':27017',
+    }
+
+    nodes.push({
+      id: 'database',
+      type: 'service',
+      position: { x: 480, y: 40 },
+      data: {
+        label: state.database.choice.charAt(0).toUpperCase() + state.database.choice.slice(1),
+        sublabel: `${state.database.name}${dbPorts[dbId] ?? ''}`,
+        icon: SERVICE_ICONS[dbId] ?? '🗄️',
+        accentColor: dbColor,
+      } as ServiceNodeData,
+    })
+
+    edges.push({
+      id: 'e-app-db',
+      source: 'app',
+      target: 'database',
+      animated: true,
+      style: { stroke: dbColor, strokeWidth: 1.5 },
+      label: 'DB connection',
+      labelStyle: { fill: 'hsl(0 0% 50%)', fontSize: 10 },
+      labelBgStyle: { fill: 'hsl(0 0% 8%)', fillOpacity: 0.8 },
+    })
+
+    // pgAdmin / Adminer (databases preset)
+    if (state.subjectPreset === 'databases') {
+      const guiId = state.database.choice === 'postgresql' ? 'pgadmin' : 'adminer'
+      const guiPort = guiId === 'pgadmin' ? ':5050' : ':8080'
+      const guiColor = SERVICE_COLORS[guiId]
+
+      nodes.push({
+        id: 'db-gui',
+        type: 'service',
+        position: { x: 480, y: 220 },
+        data: {
+          label: guiId === 'pgadmin' ? 'pgAdmin 4' : 'Adminer',
+          sublabel: guiPort,
+          icon: SERVICE_ICONS[guiId],
+          accentColor: guiColor,
+        } as ServiceNodeData,
+      })
+
+      edges.push({
+        id: 'e-gui-db',
+        source: 'db-gui',
+        target: 'database',
+        style: { stroke: guiColor, strokeWidth: 1.5, strokeDasharray: '4,3' },
+        label: 'GUI',
+        labelStyle: { fill: 'hsl(0 0% 50%)', fontSize: 10 },
+        labelBgStyle: { fill: 'hsl(0 0% 8%)', fillOpacity: 0.8 },
+      })
+
+      edges.push({
+        id: 'e-internet-gui',
+        source: 'internet',
+        target: 'db-gui',
+        style: { stroke: SERVICE_COLORS.internet, strokeWidth: 1, strokeDasharray: '5,4' },
+      })
+    }
+  }
+
+  if (state.subjectPreset === 'networks') {
+    const cadColor = SERVICE_COLORS.cadvisor
+    nodes.push({
+      id: 'cadvisor',
+      type: 'service',
+      position: { x: 480, y: state.database.choice !== 'none' ? 340 : 220 },
+      data: {
+        label: 'cAdvisor',
+        sublabel: ':9090',
+        icon: SERVICE_ICONS.cadvisor,
+        accentColor: cadColor,
+      } as ServiceNodeData,
+    })
+
+    edges.push({
+      id: 'e-app-cadvisor',
+      source: 'app',
+      target: 'cadvisor',
+      style: { stroke: cadColor, strokeWidth: 1.5, strokeDasharray: '4,3' },
+      label: 'monitoring',
+      labelStyle: { fill: 'hsl(0 0% 50%)', fontSize: 10 },
+      labelBgStyle: { fill: 'hsl(0 0% 8%)', fillOpacity: 0.8 },
+    })
+
+    edges.push({
+      id: 'e-internet-cadvisor',
+      source: 'internet',
+      target: 'cadvisor',
+      style: { stroke: SERVICE_COLORS.internet, strokeWidth: 1, strokeDasharray: '5,4' },
+    })
+  }
 
   return { nodes, edges }
 }
 
-export const ArchitectureDiagram = memo(({ state }: ArchitectureDiagramProps) => {
-  // En TS01, useMemo solo depende del state
-  const { nodes, edges } = useMemo(() => buildDiagramData(state), [state])
+// Diagram component 
+export const ArchitectureDiagram = memo(({ state, projectName = 'App' }: ArchitectureDiagramProps) => {
+  const { nodes, edges } = useMemo(() => buildDiagramData(state, projectName), [state, projectName])
 
   return (
     <div
