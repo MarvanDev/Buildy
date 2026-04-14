@@ -2,30 +2,23 @@ import { Database, RefreshCw, Eye, EyeOff } from 'lucide-react'
 import React, { useState, memo } from 'react'
 import { cn } from '../../../lib/utils'
 import { generateSecureCredentials } from '../../../hooks/useBuildyWizard'
-import type { UseBuildyWizardReturn, DatabaseChoice } from '../../../types/wizard.types'
+import type { UseBuildyWizardReturn } from '../../../types/wizard.types'
+import { DB_OPTIONS }  from '../../../constants/db.constants'
 
 interface StepProps { wizard: UseBuildyWizardReturn }
 
-const DB_OPTIONS: { id: DatabaseChoice; label: string; description: string; icon: string; bgClass: string }[] = [
-  { id: 'postgresql', label: 'PostgreSQL', description: 'Relacional · ACID', icon: '🐘', bgClass: 'bg-blue-400/10' },
-  { id: 'mysql', label: 'MySQL', description: 'Relacional · Popular', icon: '🐬', bgClass: 'bg-orange-400/10' },
-  { id: 'mongodb', label: 'MongoDB', description: 'NoSQL · Documentos', icon: '🍃', bgClass: 'bg-emerald-400/10' },
-  { id: 'none', label: 'Ninguna', description: 'Sin base de datos', icon: '∅', bgClass: 'bg-muted/30' },
-]
-
-// AISLAMOS LA TARJETA CON MEMO PARA QUE NO HAYA LAG AL ESCRIBIR
-const DbCard = memo(({ db, isSelected, onClick }: { db: any, isSelected: boolean, onClick: () => void }) => (
-  <button onClick={onClick}
-    className={cn('flex flex-col items-center gap-2.5 rounded-lg border p-4 interactive-card cursor-pointer text-center transition-all duration-75',
-      isSelected ? `card-selected ${db.bgClass}` : 'border-border bg-muted/30 hover:bg-muted/50')}>
-    <span className="text-2xl leading-none">{db.icon}</span>
+const DbCard = memo(({  db, isSelected, onClick }: { db: any, isSelected: boolean, onClick: () => void }) => (
+  <button  onClick={onClick}
+    className ={cn('flex flex-col items-center gap-2.5 rounded-lg border p-4 interactive-card cursor-pointer text-center transition-all duration-75',
+      isSelected  ? `card-selected ${db.bgClass}` : 'border-border bg-muted/30 hover:bg-muted/50')}>
+    <span className ="text-2xl leading-none">{db.icon}</span>
     <div>
-      <p className={cn('text-sm font-semibold', isSelected ? 'text-foreground' : 'text-muted-foreground')}>{db.label}</p>
-      <p className="text-xs text-muted-foreground mt-0.5">{db.description}</p>
+      <p className ={cn('text-sm font-semibold', isSelected ? 'text-foreground' : 'text-muted-foreground')}>{db.label}</p>
+      <p className ="text-xs text-muted-foreground mt-0.5">{db.description}</p>
     </div>
   </button>
 ))
-DbCard.displayName = 'DbCard'
+DbCard.displayName='DbCard'
 
 export function Step3Database({ wizard }: StepProps) {
   const { state, updateDatabase } = wizard
@@ -49,11 +42,11 @@ export function Step3Database({ wizard }: StepProps) {
 
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
         {DB_OPTIONS.map((db) => (
-          <DbCard 
-            key={db.id} 
-            db={db} 
-            isSelected={state.database.choice === db.id} 
-            onClick={() => updateDatabase({ choice: db.id })} 
+          <DbCard
+            key={db.id}
+            db={db}
+            isSelected={state.database.choice === db.id}
+            onClick={() => updateDatabase({ choice: db.id })}
           />
         ))}
       </div>
@@ -74,16 +67,16 @@ export function Step3Database({ wizard }: StepProps) {
           <div className="grid sm:grid-cols-2 gap-4">
             <div>
               <label className="text-xs font-medium text-muted-foreground mb-1.5 block uppercase tracking-wide">Nombre de la DB</label>
-              <input type="text" value={state.database.name} onChange={(e) => updateDatabase({ name: e.target.value })} placeholder="myapp_db" className="buildy-input w-full rounded-lg px-3 py-2.5 text-sm font-mono" />
+              <input type="text" value={state.database.name} onChange={(e: React.ChangeEvent<HTMLInputElement>) => updateDatabase({ name: e.target.value })} placeholder="myapp_db" className="buildy-input w-full rounded-lg px-3 py-2.5 text-sm font-mono" />
             </div>
             <div>
               <label className="text-xs font-medium text-muted-foreground mb-1.5 block uppercase tracking-wide">Usuario</label>
-              <input type="text" value={state.database.user} onChange={(e) => updateDatabase({ user: e.target.value })} placeholder="admin" className="buildy-input w-full rounded-lg px-3 py-2.5 text-sm font-mono" />
+              <input type="text" value={state.database.user} onChange={(e: React.ChangeEvent<HTMLInputElement>) => updateDatabase({ user: e.target.value })} placeholder="admin" className="buildy-input w-full rounded-lg px-3 py-2.5 text-sm font-mono" />
             </div>
             <div className="sm:col-span-2">
               <label className="text-xs font-medium text-muted-foreground mb-1.5 block uppercase tracking-wide">Contraseña</label>
               <div className="relative">
-                <input type={showPassword ? 'text' : 'password'} value={state.database.password} onChange={(e) => updateDatabase({ password: e.target.value })} placeholder="Genera una contraseña segura →" className="buildy-input w-full rounded-lg px-3 py-2.5 pr-10 text-sm font-mono" />
+                <input type={showPassword ? 'text' : 'password'} value={state.database.password} onChange={(e: React.ChangeEvent<HTMLInputElement>) => updateDatabase({ password: e.target.value })} placeholder="Genera una contraseña segura →" className="buildy-input w-full rounded-lg px-3 py-2.5 pr-10 text-sm font-mono" />
                 <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground">
                   {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                 </button>

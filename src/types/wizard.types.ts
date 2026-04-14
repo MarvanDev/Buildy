@@ -1,8 +1,8 @@
 // ============================================================
-//  Buildy — Central Type Definitions
+//  Buildy — Definiciones Centrales de Tipos
 // ============================================================
 
-// ── Core domain types ─────────────────────────────────────
+// ── Tipos principales del dominio ───────────────────────────
 export type LanguageId = 'nodejs' | 'python' | 'php' | 'java' | 'go'
 export type DatabaseChoice = 'postgresql' | 'mysql' | 'mongodb' | 'none'
 export type SubjectPresetId = 'none' | 'databases' | 'networks'
@@ -11,7 +11,7 @@ export interface TechVersion {
   label: string
   value: string
   recommended?: boolean
-  /** true when fetched live from Docker Hub, false = local fallback */
+  /** true cuando se obtienen en vivo de Docker Hub, false = respaldo local */
   live?: boolean
 }
 
@@ -37,7 +37,7 @@ export interface SubjectPreset {
   extras: string[]
 }
 
-// ── Wizard state ───────────────────────────────────────────
+// ── Estado del Asistente (Wizard) ───────────────────────────
 export interface DatabaseConfig {
   choice: DatabaseChoice
   name: string
@@ -61,7 +61,7 @@ export interface WizardState {
   subjectPreset: SubjectPresetId
 }
 
-// ── Docker Compose output ─────────────────────────────────
+// ── Salida de Docker Compose ───────────────────────────────
 export interface DockerService {
   image?: string
   build?: { context: string; dockerfile?: string }
@@ -87,24 +87,24 @@ export interface DockerComposeConfig {
   volumes?: Record<string, DockerVolume>
 }
 
-// ── API Service types ─────────────────────────────────────
-/** Result returned by the API service for a single technology */
+// ── Tipos del Servicio API ─────────────────────────────────
+/** Resultado devuelto por el servicio API para una sola tecnología */
 export interface ApiVersionResult {
   techId: LanguageId
   versions: TechVersion[]
-  /** Whether the data came from the live API or the local fallback */
+  /** Indica si los datos vinieron de la API en vivo o del respaldo local */
   source: 'api' | 'fallback'
 }
 
-/** State exposed by useBuildyWizard for version loading */
+/** Estado expuesto por useBuildyWizard para la carga de versiones */
 export interface VersionLoadState {
-  /** Is the API fetch currently in progress? */
+  /** ¿Está la carga de la API actualmente en progreso? */
   isLoadingVersions: boolean
-  /** Map of techId → whether its versions came from live API */
+  /** Mapa de techId → indica si sus versiones vinieron de la API en vivo */
   liveVersionSources: Partial<Record<LanguageId, boolean>>
 }
 
-// ── Architecture Diagram node types ───────────────────────
+// ── Tipos de nodos del Diagrama de Arquitectura ─────────────
 export type DiagramNodeKind =
   | 'app'
   | 'database'
@@ -116,22 +116,22 @@ export type DiagramNodeKind =
 export interface DiagramNodeData {
   kind: DiagramNodeKind
   label: string
-  /** Tailwind color class for the node accent (matches technology palette) */
+  /** Clase de color de Tailwind para el acento del nodo (coincide con la paleta de la tecnología) */
   colorClass: string
-  /** Emoji or icon identifier */
+  /** Emoji o identificador de icono */
   icon: string
-  /** Sub-label shown below main label */
+  /** Sub-etiqueta mostrada debajo de la etiqueta principal */
   sublabel?: string
 }
 
-// ── Hook return type ─────────────────────────────────────
+// ── Tipo de retorno del Hook ───────────────────────────────
 export interface UseBuildyWizardReturn {
-  /** @internal Used by Step1Core to set version from live data when language changes */
+  /** @internal Usado por Step1Core para establecer la versión desde datos en vivo cuando el lenguaje cambia */
   _selectLanguageVersion?: (langId: string) => void
   state: WizardState
   currentStep: number
   totalSteps: number
-  /** Technologies array, enriched with live versions when available */
+  /** Arreglo de tecnologías, enriquecido con versiones en vivo cuando están disponibles */
   technologies: Technology[]
   versionLoad: VersionLoadState
   updateState: (updates: Partial<WizardState>) => void

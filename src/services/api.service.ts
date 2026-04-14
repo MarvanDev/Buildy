@@ -1,14 +1,14 @@
 // ============================================================
-//  Buildy — Docker Hub API Service
-//  Fetches real image tags from Docker Hub.
-//  Falls back to local constants on any failure.
-//  SRP: this module is ONLY responsible for fetching versions.
+//  Buildy — Servicio de API de Docker Hub
+//  Obtiene etiquetas de imagen reales desde Docker Hub.
+//  Recurre a constantes locales en caso de cualquier fallo.
+//  SRP: este módulo es ÚNICAMENTE responsable de obtener versiones.
 // ============================================================
 
 import type { LanguageId, TechVersion, ApiVersionResult } from '../types/wizard.types'
 import { TECHNOLOGIES } from '../constants/technologies'
 
-// ── Docker Hub image identifiers per language ─────────────
+// ── Identificadores de imagen de Docker Hub por lenguaje ─────
 const DOCKER_IMAGE_MAP: Record<LanguageId, string> = {
   nodejs: 'node',
   python: 'python',
@@ -17,10 +17,10 @@ const DOCKER_IMAGE_MAP: Record<LanguageId, string> = {
   go: 'golang',
 }
 
-// ── Tag patterns that indicate stable releases ────────────
+// ── Patrones de etiquetas que indican versiones estables ────
 /**
- * Returns true if a Docker Hub tag represents a stable, usable image.
- * Excludes: rc, alpha, beta, windowsservercore, nanoserver, preview, etc.
+ * Devuelve true si una etiqueta de Docker Hub representa una imagen estable y usable.
+ * Excluye: rc, alpha, beta, windowsservercore, nanoserver, preview, etc.
  */
 function isStableTag(tag: string): boolean {
   const unstablePatterns = [
@@ -32,8 +32,8 @@ function isStableTag(tag: string): boolean {
 }
 
 /**
- * Per-language filter: selects only tags that are meaningful version identifiers.
- * Eliminates "latest", "lts", single-digit tags, etc.
+ * Filtro por lenguaje: selecciona solo etiquetas que sean identificadores de versión significativos.
+ * Elimina "latest", "lts", etiquetas de un solo dígito, etc.
  */
 function buildVersionFilter(techId: LanguageId): (tag: string) => boolean {
   const filters: Record<LanguageId, (tag: string) => boolean> = {
@@ -51,12 +51,12 @@ function buildVersionFilter(techId: LanguageId): (tag: string) => boolean {
   return filters[techId]
 }
 
-/** Converts a raw Docker Hub tag into a TechVersion object */
+/** Convierte una etiqueta cruda de Docker Hub en un objeto TechVersion */
 function toTechVersion(tag: string, recommended = false): TechVersion {
   return { label: tag, value: tag, recommended, live: true }
 }
 
-// ── Docker Hub API response shape ────────────────────────
+// ── Estructura de la respuesta de la API de Docker Hub ──────
 interface DockerHubTag {
   name: string
   tag_status: string
@@ -70,8 +70,8 @@ interface DockerHubTagsResponse {
 }
 
 /**
- * Fetches the first N pages of tags for a given Docker Hub library image.
- * Docker Hub API: GET /v2/repositories/library/{image}/tags?page_size=100
+ * Obtiene las primeras N páginas de etiquetas para una imagen de librería de Docker Hub determinada.
+ * API de Docker Hub: GET /v2/repositories/library/{image}/tags?page_size=100
  */
 async function fetchDockerHubTags(
   imageName: string,
@@ -97,8 +97,8 @@ async function fetchDockerHubTags(
 }
 
 /**
- * Fetches and filters stable versions for a single language from Docker Hub.
- * Returns the local fallback if the API call fails for any reason.
+ * Obtiene y filtra versiones estables para un solo lenguaje desde Docker Hub.
+ * Devuelve el respaldo local si la llamada a la API falla por cualquier motivo.
  */
 export async function getLatestVersions(
   techId: LanguageId,
@@ -114,29 +114,29 @@ export async function getLatestVersions(
     const filtered = rawTags
       .map((t) => t.name)
       .filter(filter)
-      // Remove duplicates
+      // Eliminar duplicados
       .filter((tag, idx, arr) => arr.indexOf(tag) === idx)
-      // Sort descending (newest first based on version numbering)
+      // Orden descendente (la versión más nueva primero según numeración)
       .sort((a, b) => b.localeCompare(a, undefined, { numeric: true }))
-      // Take at most 8 versions to keep the UI clean
+      // Tomar máximo 8 versiones para mantener la UI limpia
       .slice(0, 8)
 
     if (filtered.length === 0) {
       return { techId, versions: fallbackVersions, source: 'fallback' }
     }
 
-    // Mark the first (newest) version as recommended
+    // Marcar la primera (más nueva) versión como recomendada
     const versions = filtered.map((tag, i) => toTechVersion(tag, i === 0))
     return { techId, versions, source: 'api' }
   } catch {
-    // Silently fall back — the user should not see errors for this
+    // Fallo silencioso (fallback) — el usuario no debería ver errores por esto
     return { techId, versions: fallbackVersions, source: 'fallback' }
   }
 }
 
 /**
- * Fetches live versions for ALL supported languages concurrently.
- * Each language resolves independently so one failure doesn't block others.
+ * Obtiene versiones en vivo para TODOS los lenguajes soportados de forma concurrente.
+ * Cada lenguaje se resuelve de forma independiente para que un fallo no bloquee a los demás.
  */
 export async function getAllLatestVersions(): Promise<ApiVersionResult[]> {
   const techIds: LanguageId[] = ['nodejs', 'python', 'php', 'java', 'go']

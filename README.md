@@ -1,20 +1,40 @@
-# Introduction 
-TODO: Give a short introduction of your project. Let this section explain the objectives or the motivation behind this project. 
+# 🏗️ Buildy - Docker Wizard
 
-# Getting Started
-TODO: Guide users through getting your code up and running on their own system. In this section you can talk about:
-1.	Installation process
-2.	Software dependencies
-3.	Latest releases
-4.	API references
+Buildy es un generador visual de infraestructura diseñado para estudiantes universitarios. Permite generar archivos `docker-compose.yml` listos para usar mediante un asistente (Wizard) paso a paso, seleccionando tecnologías, bases de datos y puertos de manera intuitiva.
 
-# Build and Test
-TODO: Describe and show how to build your code and run the tests. 
+## 🚀 Tecnologías Principales
 
-# Contribute
-TODO: Explain how other users and developers can contribute to make your code better. 
+* **Core:** Vite + React + TypeScript
+* **Estilos y UI:** Tailwind CSS + shadcn/ui
+* **Gestión de Estado:** Zustand
+* **Diagramas:** React Flow (Por implementar)
+* **Empaquetado:** JSZip + File-Saver
 
-If you want to learn more about creating good readme files then refer the following [guidelines](https://docs.microsoft.com/en-us/azure/devops/repos/git/create-a-readme?view=azure-devops). You can also seek inspiration from the below readme files:
-- [ASP.NET Core](https://github.com/aspnet/Home)
-- [Visual Studio Code](https://github.com/Microsoft/vscode)
-- [Chakra Core](https://github.com/Microsoft/ChakraCore)
+## ⚙️ Instalación y Uso Local
+
+Sigue estos pasos para levantar el entorno de desarrollo en tu computadora:
+
+1. **Clonar el repositorio y entrar a la carpeta:**
+   ```bash
+   # (Reemplazar con la URL real de Azure Repos cuando esté lista)
+   git clone <url-del-repositorio>
+   cd Buildy
+Instalar las dependencias:
+
+Bash
+npm install
+Levantar el servidor local:
+
+Bash
+npm run dev
+El proyecto estará disponible en http://localhost:3000
+
+🛠️ Scripts Disponibles
+npm run dev: Inicia el servidor de desarrollo con Hot-Reload.
+
+npm run build: Compila la aplicación para producción.
+
+npm run lint: Ejecuta ESLint y TypeScript para verificar errores en el código antes de subir cambios.
+
+👥 Flujo de Trabajo (Equipo) 
+Este proyecto se gestiona a través de Azure Boards. Por favor, asegúrate de crear una rama nueva para cada Feature o Historia de Usuario antes de modificar el código base.
