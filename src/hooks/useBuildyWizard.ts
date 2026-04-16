@@ -6,8 +6,8 @@ import type {
 } from '../types/wizard.types'
 import { TECHNOLOGIES } from '../constants/technologies'
 import { getAllLatestVersions } from '../services/api.service'
-import { generateDockerCompose } from '../services/docker/docker.generator'
-import { generateReadme } from '../services/readme.generator'
+//import { generateDockerCompose } from '../services/docker/docker.generator'
+//import { generateReadme } from '../services/readme.generator'
 
 const TOTAL_STEPS = 5
 
@@ -109,15 +109,15 @@ export function useBuildyWizard<T>(selector?: (state: WizardStore) => T): T | Le
 export function useBuildyWizardUtils() {
   const store = useWizardStore();
 
-  const generatedYaml = useMemo(() => {
-    if (!store.language || !store.version) return ''
-    try { return generateDockerCompose(store) } catch { return '' }
-  }, [store.language, store.version, store.database, store.internalPort, store.persistence, store.publicAccess, store.subjectPreset]);
+  // const generatedYaml = useMemo(() => {
+  //   if (!store.language || !store.version) return ''
+  //   try { return generateDockerCompose(store) } catch { return '' }
+  // }, [store.language, store.version, store.database, store.internalPort, store.persistence, store.publicAccess, store.subjectPreset]);
 
-  const generatedReadme = useMemo(() => {
-    if (!store.language) return ''
-    return generateReadme(store)
-  }, [store.language, store.version, store.database, store.internalPort]);
+  // const generatedReadme = useMemo(() => {
+  //   if (!store.language) return ''
+  //   return generateReadme(store)
+  // }, [store.language, store.version, store.database, store.internalPort]);
 
   const canAdvance = useMemo(() => {
     switch (store.currentStep) {
@@ -142,8 +142,8 @@ export function useBuildyWizardUtils() {
   ]);
 
   return { 
-    generatedYaml, 
-    generatedReadme, 
+    // generatedYaml, 
+    // generatedReadme, 
     canAdvance,
     state: store 
   };
