@@ -10,6 +10,31 @@ export function Step2Network({ wizard }: StepProps) {
   const { state, updateState } = wizard;
   const hostBinding = `${state.publicAccess ? "0.0.0.0" : "127.0.0.1"}:${state.internalPort}:${state.internalPort}`;
 
+  const [error, setError] = useState<string | null>(null)
+    useEffect(() => {
+    validatePort(state.internalPort.toString())
+  }, [state.internalPort])
+
+  const validatePort = (val: string) => {
+    if (!val || val === '' || val === '0') {
+      setError('El puerto es obligatorio.')
+      return
+    } 
+
+  const num = parseInt(val, 10)
+    if (num < 1 || num > 65535) {
+      setError('El puerto debe estar entre 1 y 65535.')
+      return
+      }
+
+    if (isPortReserved(num)) {
+    setError(`Este puerto (${num}) es reservado o conflictivo. Por favor, elige otro (ej. 8080).`)
+    return
+  }
+  setError(null)
+}
+
+
   // FUNCIÓN DE VALIDACIÓN DE PUERTO
   const handlePortChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const rawValue = e.target.value.replace(/[^0-9]/g, "");
