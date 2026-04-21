@@ -8,7 +8,6 @@ import { TECHNOLOGIES } from '../constants/technologies'
 import { getAllLatestVersions } from '../services/api.service'
 import { generateDockerCompose } from '../services/docker/docker.generator'
 import { generateReadme } from '../services/readme.generator'
-import { RESERVED_PORTS } from '../constants/network.constants'
 
 const TOTAL_STEPS = 5
 
@@ -20,7 +19,7 @@ const INITIAL_STATE: WizardState = {
   subjectPreset: 'none',
 }
 
-// ── HU-03: Generador de credenciales seguras ──
+// ── HU-03: Generador de credenciales seguras ────
 export function generateSecureCredentials() {
   const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$'
   const password = Array.from({ length: 18 }, () =>
@@ -125,7 +124,7 @@ export function useBuildyWizardUtils() {
       case 1: 
         return store.language !== null && store.version.trim() !== '' && store.startCommand.trim() !== '';
       case 2: 
-        return store.internalPort > 0 && store.internalPort <= 65535 && !RESERVED_PORTS.includes(store.internalPort);
+        return store.internalPort > 0 && store.internalPort <= 65535;
       case 3: 
         if (store.database.choice === 'none') return true;
         return store.database.name.trim() !== '' && store.database.user.trim() !== '' && store.database.password.trim() !== '';
