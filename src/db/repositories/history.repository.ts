@@ -1,4 +1,5 @@
 // src/db/repositories/history.repository.ts
+// pipeline test
 import { dbConnection } from '../db.service';
 import type { WizardState } from '../../types/wizard.types';
 
