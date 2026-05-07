@@ -58,15 +58,21 @@ async function fetchDockerHubTags(
   // 1. Armamos la URL real de Docker Hub
   const dockerUrl = `https://hub.docker.com/v2/repositories/library/${imageName}/tags?page_size=${maxTags}&ordering=last_updated`;
   
-  // 2. Le inyectamos el CORS Proxy público al principio
-  const url = `https://corsproxy.io/?${encodeURIComponent(dockerUrl)}`;
+  // 2. Usamos AllOrigins (con /raw para que devuelva el JSON directo y limpio)
+  const url = `https://api.allorigins.win/raw?url=${encodeURIComponent(dockerUrl)}`;
 
+  // 3. Hacemos la petición (Quitamos los headers manuales porque a veces los proxies los rechazan)
   const response = await fetch(url, {
-    method: 'GET',
-    headers: {
-      'Accept': 'application/json',
-    }
+    method: 'GET'
   });
+
+  if (!response.ok) {
+    throw new Error(`Error en el proxy: ${response.status}`);
+  }
+
+  const data: DockerHubTagsResponse = await response.json();
+  return data.results || [];
+}
 
   if (!response.ok) {
     throw new Error(`Error en el proxy: ${response.status}`);
