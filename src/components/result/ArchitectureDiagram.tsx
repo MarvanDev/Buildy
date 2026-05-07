@@ -247,6 +247,7 @@ function buildDiagramData(state: WizardState, projectName: string = 'App'): {
         id: 'e-gui-db',
         source: 'db-gui',
         target: 'database',
+        animated: true,
         style: { stroke: guiColor, strokeWidth: 1.5, strokeDasharray: '4,3' },
         label: 'GUI',
         labelStyle: { fill: 'hsl(0 0% 50%)', fontSize: 10 },
@@ -257,6 +258,7 @@ function buildDiagramData(state: WizardState, projectName: string = 'App'): {
         id: 'e-internet-gui',
         source: 'internet',
         target: 'db-gui',
+        animated: true,
         style: { stroke: SERVICE_COLORS.internet, strokeWidth: 1, strokeDasharray: '5,4' },
       })
     }
@@ -280,6 +282,7 @@ function buildDiagramData(state: WizardState, projectName: string = 'App'): {
       id: 'e-app-cadvisor',
       source: 'app',
       target: 'cadvisor',
+      animated: true,
       style: { stroke: cadColor, strokeWidth: 1.5, strokeDasharray: '4,3' },
       label: 'monitoring',
       labelStyle: { fill: 'hsl(0 0% 50%)', fontSize: 10 },
