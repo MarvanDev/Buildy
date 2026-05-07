@@ -54,9 +54,12 @@ async function fetchDockerHubTags(
   imageName: string,
   maxTags = 300,
 ): Promise<DockerHubTag[]> {
-  // Ahora apuntamos a nuestro propio servidor (Vite)
-  // Vite recibirá esto y lo reenviará a hub.docker.com
-  const url = `/docker-api/v2/repositories/library/${imageName}/tags?page_size=${maxTags}&ordering=last_updated`;
+  
+  // 1. Armamos la URL real de Docker Hub
+  const dockerUrl = `https://hub.docker.com/v2/repositories/library/${imageName}/tags?page_size=${maxTags}&ordering=last_updated`;
+  
+  // 2. Le inyectamos el CORS Proxy público al principio
+  const url = `https://corsproxy.io/?${encodeURIComponent(dockerUrl)}`;
 
   const response = await fetch(url, {
     method: 'GET',
