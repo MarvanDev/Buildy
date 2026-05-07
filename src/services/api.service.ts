@@ -74,14 +74,6 @@ async function fetchDockerHubTags(
   return data.results || [];
 }
 
-  if (!response.ok) {
-    throw new Error(`Error en el proxy: ${response.status}`);
-  }
-
-  const data: DockerHubTagsResponse = await response.json();
-  return data.results || [];
-}
-
 export async function getLatestVersions(
   techId: LanguageId,
 ): Promise<ApiVersionResult> {
