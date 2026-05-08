@@ -55,13 +55,12 @@ async function fetchDockerHubTags(
   maxTags = 300,
 ): Promise<DockerHubTag[]> {
   
-  // 1. Armamos la URL real de Docker Hub
+  // 1. URL de Docker Hub
   const dockerUrl = `https://hub.docker.com/v2/repositories/library/${imageName}/tags?page_size=${maxTags}&ordering=last_updated`;
   
-  // 2. Usamos AllOrigins (con /raw para que devuelva el JSON directo y limpio)
-  const url = `https://api.allorigins.win/raw?url=${encodeURIComponent(dockerUrl)}`;
+  // 2. Usamos CodeTabs (Directo y sin encode)
+  const url = `https://api.codetabs.com/v1/proxy?quest=${dockerUrl}`;
 
-  // 3. Hacemos la petición (Quitamos los headers manuales porque a veces los proxies los rechazan)
   const response = await fetch(url, {
     method: 'GET'
   });
