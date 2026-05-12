@@ -3,49 +3,48 @@ import { useAuthStore } from '../useAuthStore';
 import { Terminal, Lock, Mail, User as UserIcon, Loader2, Box, Database, Network } from 'lucide-react';
 import { useIsMobile } from '../../hooks/use-mobile';
 
-// === COMPONENTE DE ANIMACIÓN LIGERA (Cero impacto en rendimiento) ===
+// === COMPONENTE DE ANIMACIÓN LIGERA ===
 const DockerBackground = () => {
   const isMobile = useIsMobile();
 
   return (
-    <div className="fixed inset-0 overflow-hidden pointer-events-none z-0 opacity-[0.06]">
+    <div className="fixed inset-0 overflow-hidden pointer-events-none z-0 opacity-20">
       {isMobile ? (
-        /* VERSIÓN MOBILE: Modo ahorro de batería y espacio (Solo esquinas) */
+        /* VERSIÓN MOBILE */
         <>
-          <Terminal className="absolute top-[2%] left-[5%] w-16 h-16 text-primary animate-[spin_20s_linear_infinite]" />
-          <Box className="absolute top-[5%] right-[5%] w-12 h-12 text-primary animate-[spin_15s_linear_infinite_reverse]" />
-          
-          <Database className="absolute bottom-[2%] right-[10%] w-20 h-20 text-primary animate-[spin_25s_linear_infinite]" />
-          <Network className="absolute bottom-[5%] left-[5%] w-14 h-14 text-primary animate-[spin_18s_linear_infinite_reverse]" />
+          <Terminal className="absolute top-[2%] left-[5%] w-16 h-16 text-primary" style={{ animation: 'spin 40s linear infinite' }} />
+          <Box className="absolute top-[5%] right-[5%] w-12 h-12 text-primary" style={{ animation: 'spin 35s linear infinite reverse' }} />
+          <Database className="absolute bottom-[2%] right-[10%] w-20 h-20 text-primary" style={{ animation: 'spin 45s linear infinite' }}/>
+          <Network className="absolute bottom-[5%] left-[5%] w-14 h-14 text-primary" style={{ animation: 'spin 38s linear infinite reverse' }} />
         </>
       ) : (
-        /* VERSIÓN DESKTOP: La galaxia completa */
+        /* VERSIÓN DESKTOP */
         <>
           {/* Sector Superior Izquierdo */}
-          <Terminal className="absolute top-[5%] left-[10%] w-32 h-32 text-primary animate-[spin_25s_linear_infinite]" />
-          <Box className="absolute top-[20%] left-[25%] w-16 h-16 text-primary animate-[spin_15s_linear_infinite_reverse]" />
+          <Terminal className="absolute top-[5%] left-[10%] w-32 h-32 text-primary" style={{ animation: 'spin 45s linear infinite' }} />
+          <Box className="absolute top-[20%] left-[25%] w-16 h-16 text-primary" style={{ animation: 'spin 35s linear infinite reverse' }} />
 
           {/* Sector Centro Izquierdo */}
-          <Database className="absolute top-[50%] left-[5%] w-24 h-24 text-primary animate-[spin_30s_linear_infinite]" />
+          <Database className="absolute top-[50%] left-[5%] w-24 h-24 text-primary" style={{ animation: 'spin 50s linear infinite' }} />
           
           {/* Sector Inferior Izquierdo */}
-          <Terminal className="absolute bottom-[10%] left-[15%] w-40 h-40 text-primary animate-[spin_20s_linear_infinite_reverse]" />
-          <Network className="absolute bottom-[25%] left-[35%] w-20 h-20 text-primary animate-[spin_18s_linear_infinite]" />
+          <Terminal className="absolute bottom-[10%] left-[15%] w-40 h-40 text-primary" style={{ animation: 'spin 40s linear infinite reverse' }} />
+          <Network className="absolute bottom-[25%] left-[35%] w-20 h-20 text-primary" style={{ animation: 'spin 38s linear infinite' }} />
 
           {/* Sector Superior Derecho */}
-          <Box className="absolute top-[10%] right-[15%] w-36 h-36 text-primary animate-[spin_28s_linear_infinite_reverse]" />
-          <Terminal className="absolute top-[25%] right-[35%] w-12 h-12 text-primary animate-[spin_12s_linear_infinite]" />
+          <Box className="absolute top-[10%] right-[15%] w-36 h-36 text-primary" style={{ animation: 'spin 48s linear infinite reverse' }} />
+          <Terminal className="absolute top-[25%] right-[35%] w-12 h-12 text-primary" style={{ animation: 'spin 32s linear infinite' }} />
 
           {/* Sector Centro Derecho */}
-          <Network className="absolute top-[45%] right-[8%] w-28 h-28 text-primary animate-[spin_22s_linear_infinite_reverse]" />
+          <Network className="absolute top-[45%] right-[8%] w-28 h-28 text-primary" style={{ animation: 'spin 42s linear infinite reverse' }} />
 
           {/* Sector Inferior Derecho */}
-          <Database className="absolute bottom-[15%] right-[20%] w-32 h-32 text-primary animate-[spin_26s_linear_infinite]" />
-          <Box className="absolute bottom-[5%] right-[40%] w-16 h-16 text-primary animate-[spin_16s_linear_infinite_reverse]" />
+          <Database className="absolute bottom-[15%] right-[20%] w-32 h-32 text-primary" style={{ animation: 'spin 46s linear infinite' }} />
+          <Box className="absolute bottom-[5%] right-[40%] w-16 h-16 text-primary" style={{ animation: 'spin 36s linear infinite reverse' }} />
           
           {/* Flotantes sutiles cerca del centro */}
-          <Terminal className="absolute top-[15%] left-[45%] w-10 h-10 text-primary animate-[spin_10s_linear_infinite]" />
-          <Database className="absolute bottom-[20%] right-[45%] w-14 h-14 text-primary animate-[spin_14s_linear_infinite_reverse]" />
+          <Terminal className="absolute top-[15%] left-[45%] w-10 h-10 text-primary" style={{ animation: 'spin 30s linear infinite' }} />
+          <Database className="absolute bottom-[20%] right-[45%] w-14 h-14 text-primary" style={{ animation: 'spin 34s linear infinite reverse' }} />
         </>
       )}
     </div>

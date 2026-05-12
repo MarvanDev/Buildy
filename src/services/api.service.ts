@@ -54,15 +54,15 @@ async function fetchDockerHubTags(
   imageName: string,
   maxTags = 300,
 ): Promise<DockerHubTag[]> {
-  // Ahora apuntamos a nuestro propio servidor (Vite)
-  // Vite recibirá esto y lo reenviará a hub.docker.com
-  const url = `/docker-api/v2/repositories/library/${imageName}/tags?page_size=${maxTags}&ordering=last_updated`;
+  
+  // 1. URL de Docker Hub
+  const dockerUrl = `https://hub.docker.com/v2/repositories/library/${imageName}/tags?page_size=${maxTags}&ordering=last_updated`;
+  
+  // 2. Usamos CodeTabs (Directo y sin encode)
+  const url = `https://api.codetabs.com/v1/proxy?quest=${dockerUrl}`;
 
   const response = await fetch(url, {
-    method: 'GET',
-    headers: {
-      'Accept': 'application/json',
-    }
+    method: 'GET'
   });
 
   if (!response.ok) {
