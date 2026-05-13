@@ -29,10 +29,7 @@ export function ResultView({ yaml, readme, onReset, state }: ResultViewProps) {
   const [activeTab, setActiveTab] = useState<ActiveTab>("yaml");
   const [customProjectName, setCustomProjectName] = useState("");
 
-  // MAGIA DE RENDIMIENTO: Diferimos la actualización del estado pesado
   const deferredState = useDeferredValue(state);
-
-  // Esto evita que el diagrama parpadee o cause lag al escribir rápido en el input
   const deferredProjectName = useDeferredValue(customProjectName);
 
   useEffect(() => {
@@ -48,14 +45,15 @@ export function ResultView({ yaml, readme, onReset, state }: ResultViewProps) {
       <motion.div
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
-        className="rounded-xl border border-primary/20 bg-primary/5 p-6"
+        className="rounded-xl border border-primary/20 bg-primary/5 p-4 sm:p-6"
       >
-        <div className="flex items-start justify-between">
-          <div className="flex gap-4">
-            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary/15 border border-primary/25">
+        {/* MAGIA RESPONSIVA AQUÍ: flex-col en móvil, flex-row en Desktop */}
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div className="flex gap-4 w-full sm:w-auto">
+            <div className="flex-shrink-0 flex h-12 w-12 items-center justify-center rounded-xl bg-primary/15 border border-primary/25">
               <Sparkles className="h-6 w-6 text-primary" />
             </div>
-            <div>
+            <div className="flex-1 min-w-0">
               <h2 className="text-lg font-bold text-foreground">
                 ¡Todo listo! 🎉
               </h2>
@@ -63,7 +61,7 @@ export function ResultView({ yaml, readme, onReset, state }: ResultViewProps) {
                 className="flex items-center gap-2 mt-1.5 group cursor-text"
                 title="Haz clic para editar el nombre"
               >
-                <Terminal className="h-3.5 w-3.5 text-muted-foreground" />
+                <Terminal className="flex-shrink-0 h-3.5 w-3.5 text-muted-foreground" />
                 <input
                   value={customProjectName}
                   onChange={(e) =>
@@ -71,19 +69,19 @@ export function ResultView({ yaml, readme, onReset, state }: ResultViewProps) {
                       e.target.value.replace(/[^a-z0-9-_]/gi, ""),
                     )
                   }
-                  className="bg-transparent border-b border-transparent hover:border-primary/30 focus:border-primary focus:outline-none font-mono text-sm text-primary w-auto min-w-[12rem] transition-colors"
+                  className="bg-transparent border-b border-transparent hover:border-primary/30 focus:border-primary focus:outline-none font-mono text-sm text-primary w-full sm:w-auto min-w-[10rem] transition-colors"
                 />
-                {/* Lápiz siempre semi-visible, y texto que aparece al hacer hover */}
-                <Edit2 className="h-3 w-3 text-muted-foreground/40 group-hover:text-primary transition-colors" />
-                <span className="text-[10px] font-medium text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity select-none pointer-events-none">
+                <Edit2 className="flex-shrink-0 h-3 w-3 text-muted-foreground/40 group-hover:text-primary transition-colors" />
+                <span className="hidden sm:inline-block text-[10px] font-medium text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity select-none pointer-events-none">
                   (Clic para editar)
                 </span>
               </div>
             </div>
           </div>
+          
           <button
             onClick={onReset}
-            className="flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground border border-border px-3 py-1.5 rounded-lg hover:bg-muted/30"
+            className="flex-shrink-0 self-end sm:self-auto flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground border border-border px-3 py-1.5 rounded-lg hover:bg-muted/30"
           >
             <RotateCcw className="h-3.5 w-3.5" /> Nuevo
           </button>
@@ -99,23 +97,24 @@ export function ResultView({ yaml, readme, onReset, state }: ResultViewProps) {
       </div>
 
       <div className="space-y-3">
-        <div className="flex items-center gap-1 border-b border-border">
+        {/* MAGIA RESPONSIVA AQUÍ: overflow-x-auto para que los botones no se aplasten */}
+        <div className="flex items-center gap-1 border-b border-border overflow-x-auto pb-px no-scrollbar">
           <TabButton
             active={activeTab === "yaml"}
             onClick={() => setActiveTab("yaml")}
-            icon={<FileCode className="h-3.5 w-3.5" />}
+            icon={<FileCode className="h-3.5 w-3.5 shrink-0" />}
             label="docker-compose.yml"
           />
           <TabButton
             active={activeTab === "readme"}
             onClick={() => setActiveTab("readme")}
-            icon={<BookOpen className="h-3.5 w-3.5" />}
+            icon={<BookOpen className="h-3.5 w-3.5 shrink-0" />}
             label="README.md"
           />
           <TabButton
             active={activeTab === "diagram"}
             onClick={() => setActiveTab("diagram")}
-            icon={<Network className="h-3.5 w-3.5" />}
+            icon={<Network className="h-3.5 w-3.5 shrink-0" />}
             label="Arquitectura Visual"
           />
         </div>
@@ -131,8 +130,6 @@ export function ResultView({ yaml, readme, onReset, state }: ResultViewProps) {
           {activeTab === "readme" && (
             <CodeBlock code={readme} language="markdown" filename="README.md" />
           )}
-
-          {/* 2. FABIÁN: Pasar las variables diferidas al componente de Camilo */}
           {activeTab === "diagram" && (
             <ArchitectureDiagram
               state={deferredState}
@@ -150,7 +147,7 @@ function TabButton({ active, onClick, icon, label }: any) {
     <button
       onClick={onClick}
       className={cn(
-        "flex items-center gap-2 px-4 py-2 text-xs font-medium border-b-2 transition-all",
+        "flex items-center gap-2 px-4 py-2 text-xs font-medium border-b-2 transition-all whitespace-nowrap",
         active
           ? "border-primary text-foreground"
           : "border-transparent text-muted-foreground hover:text-foreground",
