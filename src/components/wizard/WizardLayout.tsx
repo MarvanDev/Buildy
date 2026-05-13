@@ -1,7 +1,8 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Box, Terminal } from 'lucide-react'
+import { Box, Terminal, LogOut, User as UserIcon } from 'lucide-react'
 import { useBuildyWizard, useBuildyWizardUtils } from '../../hooks/useBuildyWizard'
+import { useAuthStore } from '../../auth/useAuthStore' // IMPORTACIÓN NUEVA (verifica la ruta)
 import { StepIndicator } from './StepIndicator'
 import { NavigationButtons } from './NavigationButtons'
 import { Step1Core } from './steps/Step1Core'
@@ -25,9 +26,12 @@ export function WizardLayout() {
   // 2. Las utilidades (validación, YAML, README y variables de cálculo)
   const utils = useBuildyWizardUtils()
 
+  // 3. Autenticación (NUEVO)
+  const { user, logout } = useAuthStore()
+
   const [showResult, setShowResult] = useState(false)
 
-  // Variables calculadas manualmente (ya que las quitamos del store principal para optimizar)
+  // Variables calculadas
   const isFirstStep = wizardStore.currentStep === 1
   const isLastStep = wizardStore.currentStep === 5
 
@@ -46,8 +50,6 @@ export function WizardLayout() {
 
   const completedSteps = Array.from({ length: wizardStore.currentStep - 1 }, (_, i) => i + 1)
 
-  // Reconstruimos el objeto 'wizard' tal cual lo esperan tus Steps (StepProps)
-  // Esto engaña felizmente a TypeScript y a tus componentes originales
   const wizardForSteps = {
     ...wizardStore,
     state: wizardStore,
@@ -74,6 +76,8 @@ export function WizardLayout() {
     <div className="min-h-screen bg-background bg-noise flex flex-col">
       <header className="border-b border-border/60 bg-card/50 backdrop-blur-sm sticky top-0 z-10">
         <div className="max-w-4xl mx-auto px-6 py-4 flex items-center justify-between">
+          
+          {/* LADO IZQUIERDO: Logo y Nombre */}
           <div className="flex items-center gap-3">
             <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/15 border border-primary/20">
               <Box className="h-5 w-5 text-primary" />
@@ -83,10 +87,37 @@ export function WizardLayout() {
               <p className="text-xs text-muted-foreground hidden sm:block">Docker Compose Generator</p>
             </div>
           </div>
-          <div className="flex items-center gap-2 text-xs text-muted-foreground">
-            <Terminal className="h-3.5 w-3.5" />
-            <span className="hidden sm:inline">docker-compose wizard</span>
+          
+          {/* LADO DERECHO: Info del Usuario y Logout (NUEVO) */}
+          <div className="flex items-center gap-4">
+            {/* Terminal text (Solo en desktop si hay espacio) */}
+            <div className="hidden md:flex items-center gap-2 text-xs text-muted-foreground mr-2">
+              <Terminal className="h-3.5 w-3.5" />
+              <span>docker-compose wizard</span>
+            </div>
+
+            {user && (
+              <div className="flex items-center gap-3 border-l border-border/50 pl-4">
+                <div className="hidden sm:flex flex-col items-end">
+                  <span className="text-sm font-semibold text-foreground leading-tight">{user.name}</span>
+                  <span className="text-xs text-muted-foreground">{user.email}</span>
+                </div>
+                
+                <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center border border-primary/20">
+                  <UserIcon className="w-4 h-4 text-primary" />
+                </div>
+
+                <button 
+                  onClick={() => logout()}
+                  className="ml-1 p-2 text-muted-foreground hover:text-destructive hover:bg-destructive/10 rounded-lg transition-colors flex items-center gap-2"
+                  title="Cerrar sesión"
+                >
+                  <LogOut className="w-4 h-4" />
+                </button>
+              </div>
+            )}
           </div>
+
         </div>
       </header>
 
