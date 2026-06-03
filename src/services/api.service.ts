@@ -84,25 +84,46 @@ export async function getLatestVersions(
     const rawTags = await fetchDockerHubTags(imageName)
     const filter = buildVersionFilter(techId)
 
-    const filtered = rawTags
+    // 1. Guardamos los valores quemados para detectar cuáles ya tenemos
+    const fallbackValues = new Set(fallbackVersions.map(v => v.value))
+
+    // 2. Filtramos las versiones que vienen de Docker Hub
+    const liveTags = rawTags
       .map((t) => t.name)
       .filter(filter)
+      .filter((tag) => !fallbackValues.has(tag)) // MAGIA ANTI-DUPLICADOS
       .filter((tag, idx, arr) => arr.indexOf(tag) === idx)
       .sort((a, b) => b.localeCompare(a, undefined, { numeric: true }))
-      .slice(0, 8)
+      .slice(0, 5) // Traemos solo las 5 más recientes para no saturar la lista
 
-    if (filtered.length === 0) {
+    if (liveTags.length === 0) {
       return { techId, versions: fallbackVersions, source: 'fallback' }
     }
+    const liveVersions: TechVersion[] = liveTags.map((tag) => ({
+      label: `${tag} (Live 🔥)`,
+      value: tag,
+      recommended: false,
+      live: true
+    }))
 
-    const versions = filtered.map((tag, i) => toTechVersion(tag, i === 0))
-    return { techId, versions, source: 'api' }
+    // 4. Fusionamos las listas: Primero las estables, luego las en vivo
+    const combinedVersions = [...fallbackVersions, ...liveVersions]
+
+    return { techId, versions: combinedVersions, source: 'api' }
   } catch {
     return { techId, versions: fallbackVersions, source: 'fallback' }
   }
 }
 
 export async function getAllLatestVersions(): Promise<ApiVersionResult[]> {
-  const techIds: LanguageId[] = ['nodejs', 'python', 'php', 'java', 'go']
-  return Promise.all(techIds.map(getLatestVersions))
+  const techIds: LanguageId[] = ['nodejs', 'python', 'php', 'java', 'go'];
+  const results: ApiVersionResult[] = [];
+
+  // En lugar de disparar las 5 peticiones a la vez (lo que bloquea el proxy),
+  // hacemos una fila: pedimos una, esperamos, pedimos la otra.
+  for (const id of techIds) {
+    results.push(await getLatestVersions(id));
+  }
+
+  return results;
 }

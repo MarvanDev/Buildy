@@ -1,0 +1,10 @@
+version: '3.8'
+services:
+  buildy-app:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    container_name: buildy_frontend
+    ports:
+      - "8080:80"
+    restart: unless-stopped
