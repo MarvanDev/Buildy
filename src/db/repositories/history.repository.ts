@@ -1,5 +1,5 @@
-// src/db/repositories/history.repository.ts
-// pipeline test
+
+
 import { dbConnection } from '../db.service';
 import type { WizardState } from '../../types/wizard.types';
 
@@ -17,7 +17,7 @@ export interface IHistoryRepository {
 
 class LocalHistoryRepository implements IHistoryRepository {
   constructor() {
-    dbConnection.log(); // Verificamos conexión
+    dbConnection.log(); 
   }
 
   async saveWizardState(userId: string, state: WizardState): Promise<void> {
@@ -29,12 +29,12 @@ class LocalHistoryRepository implements IHistoryRepository {
       state,
     };
     console.log('✅ Estado guardado en DB simulada:', record);
-    // Lógica real de guardado iría aquí
+    
   }
 
   async getHistory(userId: string): Promise<HistoryRecord[]> {
     await new Promise((resolve) => setTimeout(resolve, 500));
-    return []; // Retorna historial vacío por ahora
+    return []; 
   }
 }
 

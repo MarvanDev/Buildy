@@ -30,6 +30,6 @@ export function generateDockerCompose(state: WizardState): string {
     '',
   ].join('\n')
 
-  // la librería YAML hace en una línea lo antes se hacía en 25
+  
   return header + '\n' + YAML.stringify(config)
 }

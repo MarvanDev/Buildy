@@ -3,13 +3,13 @@
  * con servicios comunes en la máquina del usuario o del sistema.
  */
 export const RESERVED_PORTS = [
-  80,    // HTTP
-  443,   // HTTPS
-  3306,  // MySQL local
-  5432,  // PostgreSQL local
-  27017, // MongoDB local
-  9090,  // cAdvisor / Prometheus
-  5050   // pgAdmin
+  80,    
+  443,   
+  3306,  
+  5432,  
+  27017, 
+  9090,  
+  5050   
 ];
 
 export function isPortReserved(port: number): boolean {

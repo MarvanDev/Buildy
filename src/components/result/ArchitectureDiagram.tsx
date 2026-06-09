@@ -1,9 +1,9 @@
-// ============================================================
-//  ArchitectureDiagram — Visual service topology using React Flow
-//  Renders a reactive diagram driven by WizardState.
-//  SRP: this module only builds the node/edge graph; it does
-//  NOT touch Docker generation or any other service layer.
-// ============================================================
+
+
+
+
+
+
 
 import { useMemo, memo } from 'react'
 import {
@@ -20,13 +20,13 @@ import {
 import '@xyflow/react/dist/style.css' 
 import type { WizardState } from '../../types/wizard.types'
 
-//  Props interface
+
 interface ArchitectureDiagramProps {
   state: WizardState
   projectName?: string
 }
 
-//  Node data shape 
+
 interface ServiceNodeData {
   label: string
   sublabel: string
@@ -37,7 +37,7 @@ interface ServiceNodeData {
   [key: string]: unknown
 }
 
-// Custom Node component 
+
 function ServiceNode({ data }: { data: ServiceNodeData }) {
   return (
     <div
@@ -118,12 +118,12 @@ function ServiceNode({ data }: { data: ServiceNodeData }) {
   )
 }
 
-// Custom node types registry 
+
 const nodeTypes: NodeTypes = {
   service: ServiceNode as NodeTypes['service'],
 }
 
-// Color palette per service kind
+
 const SERVICE_COLORS: Record<string, string> = {
   nodejs: 'hsl(142 71% 45%)',
   python: 'hsl(207 90% 54%)',
@@ -146,7 +146,7 @@ const SERVICE_ICONS: Record<string, string> = {
   internet: '🌐',
 }
 
-// Node/edge builder
+
 function buildDiagramData(state: WizardState, projectName: string = 'App'): {
   nodes: Node[]
   edges: Edge[]
@@ -169,7 +169,7 @@ function buildDiagramData(state: WizardState, projectName: string = 'App'): {
     } as ServiceNodeData,
   })
 
-  // App node (main)
+  
   nodes.push({
     id: 'app',
     type: 'service',
@@ -194,7 +194,7 @@ function buildDiagramData(state: WizardState, projectName: string = 'App'): {
     labelBgStyle: { fill: 'hsl(0 0% 8%)', fillOpacity: 0.8 },
   })
 
-  // Database node
+  
   if (state.database.choice !== 'none') {
     const dbId = state.database.choice
     const dbColor = SERVICE_COLORS[dbId] ?? 'hsl(185 85% 47%)'
@@ -225,7 +225,7 @@ function buildDiagramData(state: WizardState, projectName: string = 'App'): {
       labelBgStyle: { fill: 'hsl(0 0% 8%)', fillOpacity: 0.8 },
     })
 
-    // pgAdmin / Adminer (databases preset)
+    
     if (state.subjectPreset === 'databases') {
       const guiId = state.database.choice === 'postgresql' ? 'pgadmin' : 'adminer'
       const guiPort = guiId === 'pgadmin' ? ':5050' : ':8080'
@@ -300,7 +300,7 @@ function buildDiagramData(state: WizardState, projectName: string = 'App'): {
   return { nodes, edges }
 }
 
-// Diagram component 
+
 export const ArchitectureDiagram = memo(({ state, projectName = 'App' }: ArchitectureDiagramProps) => {
   const { nodes, edges } = useMemo(() => buildDiagramData(state, projectName), [state, projectName])
 

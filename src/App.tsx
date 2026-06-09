@@ -1,19 +1,16 @@
-// src/App.tsx
 import { useEffect } from 'react'
 import { WizardLayout } from './components/wizard/WizardLayout'
 import { ProtectedRoute } from './auth/components/ProtectedRoute'
-import { useAuthStore } from './auth/useAuthStore' // Verifica que esta ruta sea correcta
+import { useAuthStore } from './auth/useAuthStore' 
 
 function App() {
   const initAuth = useAuthStore((state) => state.initAuth);
   const isCheckingAuth = useAuthStore((state) => state.isCheckingAuth);
 
-  // Le decimos a Firebase que revise si hay un usuario al abrir la app
   useEffect(() => {
     initAuth();
-  }, [initAuth]);
+  }, [initAuth]);     
 
-  // Si está revisando, mostramos una pantalla de carga para que no "parpadee" el login
   if (isCheckingAuth) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">

@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Box, Terminal, LogOut, User as UserIcon } from 'lucide-react'
 import { useBuildyWizard, useBuildyWizardUtils } from '../../hooks/useBuildyWizard'
-import { useAuthStore } from '../../auth/useAuthStore' // IMPORTACIÓN NUEVA (verifica la ruta)
+import { useAuthStore } from '../../auth/useAuthStore' 
 import { StepIndicator } from './StepIndicator'
 import { NavigationButtons } from './NavigationButtons'
 import { Step1Core } from './steps/Step1Core'
@@ -20,18 +20,18 @@ const stepVariants = {
 }
 
 export function WizardLayout() {
-  // 1. El estado base (navegación y datos crudos)
+  
   const wizardStore = useBuildyWizard()
   
-  // 2. Las utilidades (validación, YAML, README y variables de cálculo)
+  
   const utils = useBuildyWizardUtils()
 
-  // 3. Autenticación (NUEVO)
+  
   const { user, logout } = useAuthStore()
 
   const [showResult, setShowResult] = useState(false)
 
-  // Variables calculadas
+  
   const isFirstStep = wizardStore.currentStep === 1
   const isLastStep = wizardStore.currentStep === 5
 

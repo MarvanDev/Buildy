@@ -9,7 +9,7 @@ export class PhpDockerStrategy implements DockerGeneratorStrategy {
       container_name: 'app', 
       restart: 'unless-stopped', 
       ports: [buildPortBinding(state.internalPort, state.publicAccess)], 
-      volumes: buildAppVolumes(state, '/var/www/html'), // ¡Le pasamos la ruta especial de PHP!
+      volumes: buildAppVolumes(state, '/var/www/html'), 
       environment: { APACHE_DOCUMENT_ROOT: '/var/www/html/public' }, 
       networks: ['app-network'] 
     }

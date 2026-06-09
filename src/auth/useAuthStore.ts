@@ -5,22 +5,22 @@ interface AuthState {
   user: User | null;
   isAuthenticated: boolean;
   isLoading: boolean;
-  isCheckingAuth: boolean; // NUEVO: Para saber si está cargando por primera vez
+  isCheckingAuth: boolean; 
   error: string | null;
   login: (email: string, pass: string) => Promise<void>;
   register: (email: string, pass: string, name: string) => Promise<void>;
   logout: () => Promise<void>;
-  initAuth: () => void; // NUEVO
+  initAuth: () => void; 
 }
 
 export const useAuthStore = create<AuthState>((set) => ({
   user: null,
   isAuthenticated: false,
   isLoading: false,
-  isCheckingAuth: true, // NUEVO: Inicia en true hasta que Firebase nos responda
+  isCheckingAuth: true, 
   error: null,
 
-  // ... (Tus funciones login, register y logout quedan EXACTAMENTE IGUAL)
+  
   login: async (email, pass) => {
     set({ isLoading: true, error: null });
     try {
@@ -47,7 +47,7 @@ export const useAuthStore = create<AuthState>((set) => ({
     set({ user: null, isAuthenticated: false, isLoading: false });
   },
 
-  // NUEVO: Conectamos la vigilancia de Firebase con nuestro estado
+  
   initAuth: () => {
     authService.onAuthStateChange((user) => {
       if (user) {

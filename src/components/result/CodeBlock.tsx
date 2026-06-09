@@ -17,17 +17,17 @@ interface CodeBlockProps {
  * Mantenemos esto en el frontend para evitar dependencias pesadas de highlighting.
  */
 function highlightYaml(code: string): string {
-  if (!code) return ""; // <--- SALVAVIDAS 1
+  if (!code) return ""; 
 
   return code
     .split("\n")
     .map((line) => {
-      // Comentarios
+      
       if (line.trimStart().startsWith("#")) {
         return `<span class="yaml-comment">${escHtml(line)}</span>`;
       }
 
-      // Claves YAML (key: value)
+      
       const keyMatch = line.match(/^(\s*)([\w-]+)(:)(\s*.*)$/);
       if (keyMatch) {
         const [, indent, key, colon, rest] = keyMatch;
@@ -35,7 +35,7 @@ function highlightYaml(code: string): string {
         return `${escHtml(indent)}<span class="yaml-key">${escHtml(key)}</span><span class="text-muted-foreground">${escHtml(colon)}</span>${coloredRest}`;
       }
 
-      // Lista items
+      
       const listMatch = line.match(/^(\s*)(- )(.*)$/);
       if (listMatch) {
         const [, indent, dash, value] = listMatch;
@@ -51,19 +51,19 @@ function colorizeYamlValue(value: string): string {
   const trimmed = value.trim();
   if (trimmed === "") return "";
 
-  // Números
+  
   if (/^\s+\d+$/.test(value)) {
     return `<span class="yaml-number">${escHtml(value)}</span>`;
   }
-  // Booleanos
+  
   if (/^\s+(true|false|yes|no)$/i.test(value)) {
     return `<span class="yaml-number">${escHtml(value)}</span>`;
   }
-  // Strings con comillas
+  
   if (/^\s+".*"$/.test(value) || /^\s+'.*'$/.test(value)) {
     return `<span class="yaml-string">${escHtml(value)}</span>`;
   }
-  // Valores generales
+  
   return `<span class="yaml-value">${escHtml(value)}</span>`;
 }
 
@@ -76,7 +76,7 @@ function escHtml(str: string): string {
 }
 
 function highlightMarkdown(code: string): string {
-  if (!code) return ""; // <--- SALVAVIDAS 2
+  if (!code) return ""; 
 
   return code
     .split("\n")
@@ -100,7 +100,7 @@ function highlightMarkdown(code: string): string {
     .join("\n");
 }
 
-// <--- SALVAVIDAS 3: code = "" por defecto
+
 export function CodeBlock({ code = "", language, filename }: CodeBlockProps) {
   const [copied, setCopied] = useState(false);
 

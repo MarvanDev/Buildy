@@ -55,10 +55,10 @@ async function fetchDockerHubTags(
   maxTags = 300,
 ): Promise<DockerHubTag[]> {
   
-  // 1. URL de Docker Hub
+  
   const dockerUrl = `https://hub.docker.com/v2/repositories/library/${imageName}/tags?page_size=${maxTags}&ordering=last_updated`;
   
-  // 2. Usamos CodeTabs (Directo y sin encode)
+  
   const url = `https://api.codetabs.com/v1/proxy?quest=${dockerUrl}`;
 
   const response = await fetch(url, {
@@ -84,17 +84,17 @@ export async function getLatestVersions(
     const rawTags = await fetchDockerHubTags(imageName)
     const filter = buildVersionFilter(techId)
 
-    // 1. Guardamos los valores quemados para detectar cuáles ya tenemos
+    
     const fallbackValues = new Set(fallbackVersions.map(v => v.value))
 
-    // 2. Filtramos las versiones que vienen de Docker Hub
+    
     const liveTags = rawTags
       .map((t) => t.name)
       .filter(filter)
-      .filter((tag) => !fallbackValues.has(tag)) // MAGIA ANTI-DUPLICADOS
+      .filter((tag) => !fallbackValues.has(tag)) 
       .filter((tag, idx, arr) => arr.indexOf(tag) === idx)
       .sort((a, b) => b.localeCompare(a, undefined, { numeric: true }))
-      .slice(0, 5) // Traemos solo las 5 más recientes para no saturar la lista
+      .slice(0, 5) 
 
     if (liveTags.length === 0) {
       return { techId, versions: fallbackVersions, source: 'fallback' }
@@ -106,7 +106,7 @@ export async function getLatestVersions(
       live: true
     }))
 
-    // 4. Fusionamos las listas: Primero las estables, luego las en vivo
+    
     const combinedVersions = [...fallbackVersions, ...liveVersions]
 
     return { techId, versions: combinedVersions, source: 'api' }
@@ -119,8 +119,8 @@ export async function getAllLatestVersions(): Promise<ApiVersionResult[]> {
   const techIds: LanguageId[] = ['nodejs', 'python', 'php', 'java', 'go'];
   const results: ApiVersionResult[] = [];
 
-  // En lugar de disparar las 5 peticiones a la vez (lo que bloquea el proxy),
-  // hacemos una fila: pedimos una, esperamos, pedimos la otra.
+  
+  
   for (const id of techIds) {
     results.push(await getLatestVersions(id));
   }

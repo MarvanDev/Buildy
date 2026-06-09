@@ -50,13 +50,13 @@ export function StepIndicator({
                     'text-sm font-semibold transition-all duration-300',
                     'ring-2 ring-offset-2 ring-offset-background',
                     {
-                      // Activo
+                      
                       'bg-primary text-primary-foreground ring-primary shadow-glow scale-110':
                         isActive,
-                      // Completado
+                      
                       'bg-primary/20 text-primary ring-primary/40 cursor-pointer hover:bg-primary/30':
                         isPast && !isActive,
-                      // Pendiente
+                      
                       'bg-muted text-muted-foreground ring-transparent':
                         !isActive && !isPast,
                     }

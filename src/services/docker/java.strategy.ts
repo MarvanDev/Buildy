@@ -11,7 +11,7 @@ export class JavaDockerStrategy implements DockerGeneratorStrategy {
       restart: 'unless-stopped', 
       command: state.startCommand || 'java -jar app.jar', 
       ports: [buildPortBinding(state.internalPort, state.publicAccess)], 
-      volumes: buildAppVolumes(state), // ¡Ahora usa el builder!
+      volumes: buildAppVolumes(state), 
       environment: { JAVA_OPTS: '-Xms256m -Xmx512m', SERVER_PORT: String(state.internalPort) }, 
       networks: ['app-network'] 
     }

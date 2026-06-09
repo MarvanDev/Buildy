@@ -13,7 +13,7 @@ const DB_OPTIONS: { id: DatabaseChoice; label: string; description: string; icon
   { id: 'none', label: 'Ninguna', description: 'Sin base de datos', icon: '∅', bgClass: 'bg-muted/30' },
 ]
 
-// AISLAMOS LA TARJETA CON MEMO PARA QUE NO HAYA LAG AL ESCRIBIR
+
 const DbCard = memo(({ db, isSelected, onClick }: { db: any, isSelected: boolean, onClick: () => void }) => (
   <button onClick={onClick}
     className={cn('flex flex-col items-center gap-2.5 rounded-lg border p-4 interactive-card cursor-pointer text-center transition-all duration-75',

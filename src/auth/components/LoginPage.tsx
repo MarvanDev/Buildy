@@ -3,7 +3,7 @@ import { useAuthStore } from '../useAuthStore';
 import { Terminal, Lock, Mail, User as UserIcon, Loader2, Box, Database, Network } from 'lucide-react';
 import { useIsMobile } from '../../hooks/use-mobile';
 
-// === COMPONENTE DE ANIMACIÓN LIGERA ===
+
 const DockerBackground = () => {
   const isMobile = useIsMobile();
 
@@ -54,7 +54,7 @@ const DockerBackground = () => {
 export function LoginPage() {
   const { login, register, isLoading, error } = useAuthStore();
   
-  // Estados del formulario
+  
   const [isRegistering, setIsRegistering] = useState(false);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -71,7 +71,7 @@ export function LoginPage() {
 
   const toggleMode = () => {
     setIsRegistering(!isRegistering);
-    // Limpiamos errores y contraseñas al cambiar de modo
+    
     setPassword(''); 
   };
 

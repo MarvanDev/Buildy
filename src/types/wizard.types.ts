@@ -1,8 +1,8 @@
-// ============================================================
-//  Buildy — Definiciones Centrales de Tipos
-// ============================================================
 
-// ── Tipos principales del dominio ───────────────────────────
+
+
+
+
 export type LanguageId = 'nodejs' | 'python' | 'php' | 'java' | 'go'
 export type DatabaseChoice = 'postgresql' | 'mysql' | 'mongodb' | 'none'
 export type SubjectPresetId = 'none' | 'databases' | 'networks'
@@ -37,7 +37,7 @@ export interface SubjectPreset {
   extras: string[]
 }
 
-// ── Estado del Asistente (Wizard) ───────────────────────────
+
 export interface DatabaseConfig {
   choice: DatabaseChoice
   name: string
@@ -61,7 +61,7 @@ export interface WizardState {
   subjectPreset: SubjectPresetId
 }
 
-// ── Salida de Docker Compose ───────────────────────────────
+
 export interface DockerService {
   image?: string
   build?: { context: string; dockerfile?: string }
@@ -87,7 +87,7 @@ export interface DockerComposeConfig {
   volumes?: Record<string, DockerVolume>
 }
 
-// ── Tipos del Servicio API ─────────────────────────────────
+
 /** Resultado devuelto por el servicio API para una sola tecnología */
 export interface ApiVersionResult {
   techId: LanguageId
@@ -104,7 +104,7 @@ export interface VersionLoadState {
   liveVersionSources: Partial<Record<LanguageId, boolean>>
 }
 
-// ── Tipos de nodos del Diagrama de Arquitectura ─────────────
+
 export type DiagramNodeKind =
   | 'app'
   | 'database'
@@ -124,7 +124,7 @@ export interface DiagramNodeData {
   sublabel?: string
 }
 
-// ── Tipo de retorno del Hook ───────────────────────────────
+
 export interface UseBuildyWizardReturn {
   /** @internal Usado por Step1Core para establecer la versión desde datos en vivo cuando el lenguaje cambia */
   _selectLanguageVersion?: (langId: string) => void

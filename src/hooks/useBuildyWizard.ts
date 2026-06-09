@@ -19,7 +19,7 @@ const INITIAL_STATE: WizardState = {
   subjectPreset: 'none',
 }
 
-// ── HU-03: Generador de credenciales seguras ────
+
 export function generateSecureCredentials() {
   const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$'
   const password = Array.from({ length: 18 }, () =>
@@ -47,7 +47,7 @@ interface WizardStore extends WizardState {
   resetWizard: () => void;
 }
 
-// ── Store Global con Zustand ──
+
 const useWizardStore = create<WizardStore>((set) => ({
   ...INITIAL_STATE,
   currentStep: 1,
@@ -65,7 +65,7 @@ const useWizardStore = create<WizardStore>((set) => ({
   resetWizard: () => set({ ...INITIAL_STATE, currentStep: 1 }),
 }))
 
-// ── Hook optimizado (Soporta componentes viejos y nuevos sin dar error) ──
+
 export type LegacyWizardReturn = WizardStore & { state: WizardStore };
 
 export function useBuildyWizard(): LegacyWizardReturn;
@@ -97,14 +97,14 @@ export function useBuildyWizard<T>(selector?: (state: WizardStore) => T): T | Le
     return () => { isMounted = false };
   }, [setTechs, setLoad, techSource]);
 
-  // Obtenemos el store completo. Si hay selector, devolvemos solo ese pedacito.
-  // Si no hay selector (como en tus Steps), devolvemos el store + el objeto 'state' anidado.
+  
+  
   const store = useWizardStore();
   if (selector) return selector(store);
   return { ...store, state: store };
 }
 
-// ── Utilidades separadas para no dar lag a la UI ──
+
 export function useBuildyWizardUtils() {
   const store = useWizardStore();
 
