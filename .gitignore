@@ -22,3 +22,8 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Archivos de entorno local (Bloqueados)
+.env.*
+.env.local
+.env.production

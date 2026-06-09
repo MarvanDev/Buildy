@@ -2,21 +2,21 @@ import { initializeApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
 
 const firebaseConfig = {
-  apiKey: "AIzaSyCDPrCCEDJjfALfDMBawBW8LBkks_X6xdE",
-  authDomain: "buildy-96e0e.firebaseapp.com",
-  projectId: "buildy-96e0e",
-  storageBucket: "buildy-96e0e.firebasestorage.app",
-  messagingSenderId: "101289311017",
-  appId: "1:101289311017:web:21334d2a3de829a26d5538"
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID
 };
 
 // Inicializar Firebase
 const app = initializeApp(firebaseConfig);
 
-// Exportar el servicio de autenticación para usarlo en el auth.service.ts
+// Exportar el servicio de autenticación
 export const authInstance = getAuth(app);
 
 export const dbConnection = {
   isConnected: true,
-  log: () => console.log('🔥 Conectado a Firebase'),
+  log: () => console.log('🔥 Conectado a Firebase de forma segura'),
 };
