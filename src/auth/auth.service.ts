@@ -2,8 +2,8 @@ import {
   signInWithEmailAndPassword, 
   createUserWithEmailAndPassword, 
   signOut,
-  onAuthStateChanged, // NUEVO
-  User as FirebaseUser // NUEVO: Le cambiamos el nombre aquí para que no choque con tu interfaz User
+  onAuthStateChanged,
+  User as FirebaseUser 
 } from 'firebase/auth';
 import { authInstance } from '../db/db.service';
 
@@ -17,12 +17,11 @@ export interface IAuthService {
   login(email: string, password: string): Promise<User>;
   register(email: string, password: string, name: string): Promise<User>;
   logout(): Promise<void>;
-  onAuthStateChange(callback: (user: User | null) => void): void; // NUEVO
+  onAuthStateChange(callback: (user: User | null) => void): void;
 }
 
 class FirebaseAuthService implements IAuthService {
   
-  // ... (Tus funciones login, register y logout quedan EXACTAMENTE IGUAL)
   async login(email: string, password: string): Promise<User> {
     try {
       const userCredential = await signInWithEmailAndPassword(authInstance, email, password);
@@ -51,7 +50,6 @@ class FirebaseAuthService implements IAuthService {
     await signOut(authInstance);
   }
 
-  // NUEVO: La función que vigila si hay alguien logueado al recargar la página
   onAuthStateChange(callback: (user: User | null) => void): void {
     onAuthStateChanged(authInstance, (firebaseUser: FirebaseUser | null) => {
       if (firebaseUser) {
