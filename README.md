@@ -18,7 +18,7 @@ Infraestructura y Nube (DevOps): Docker + Azure Container Registry (ACR) + Azure
 ⚠️ IMPORTANTE: Este proyecto usa pnpm para la gestión de dependencias. NO uses npm install.
 
 1. Clonar el repositorio y entrar a la carpeta:
-git clone https://github.com/MarvanDev/Buildy.git
+git clone https://github.com/TU_USUARIO_AQUI/Buildy.git
 cd Buildy
 
 2. Configurar Entorno Seguro:
